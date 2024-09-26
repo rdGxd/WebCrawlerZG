@@ -30,7 +30,7 @@ class ANSCrawler {
 
         Document prestador = configure {
             request.uri = acessGov
-        }.get() as Document
+        }.get()
 
         String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
@@ -42,7 +42,7 @@ class ANSCrawler {
 
         Document acessMesAno = configure {
             request.uri = mesAno
-        }.get() as Document
+        }.get()
 
         acessMesAno.select("tr").each { tr ->
             String url = tr.select("a").attr("href")
@@ -58,7 +58,7 @@ class ANSCrawler {
 
         Document prestador = configure {
             request.uri = acessGov
-        }.get() as Document
+        }.get()
 
         String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
@@ -70,7 +70,7 @@ class ANSCrawler {
 
         Document acessHistorico = configure {
             request.uri = historico
-        }.get() as Document
+        }.get()
 
         acessHistorico.select("table tr").each { row ->
             def columns = row.select("td")
@@ -89,13 +89,11 @@ class ANSCrawler {
     }
 
     static void baixarTabelaErros(String downloadDir, Document gov) {
-
-
         String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
         Document prestador = configure {
             request.uri = acessGov
-        }.get() as Document
+        }.get()
 
         String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
@@ -107,7 +105,7 @@ class ANSCrawler {
 
         Document acessTabelas = configure {
             request.uri = tabelas
-        }.get() as Document
+        }.get()
 
         String linkDownload = acessTabelas.getElementsContainingOwnText("Clique aqui para baixar a tabela de erros no envio para a ANS (.xlsx)").first().attr("href")
 
