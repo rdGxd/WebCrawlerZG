@@ -1,6 +1,5 @@
 package org.example
 
-import groovyx.net.http.HttpBuilder
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -14,23 +13,22 @@ import org.jsoup.nodes.Document
 class ANSCrawler {
     static void main(String[] args) {
         String downloadDir = "./Downloads/Aquivos_padrao_TISS"
-        new File(downloadDir).mkdirs()
-
-        componenteDeComunicaCao(downloadDir)
-
-        coletarDadosHistoricos()
-
-        baixarTabelaErros(downloadDir)
-    }
-
-    static void componenteDeComunicaCao(String downloadDir) {
         Document gov = configure {
             request.uri = 'https://www.gov.br/ans/pt-br'
         }.get()
+        new File(downloadDir).mkdirs()
 
+        componenteDeComunicaCao(downloadDir, gov)
+
+        coletarDadosHistoricos(downloadDir, gov)
+
+        baixarTabelaErros(downloadDir, gov)
+    }
+
+    static void componenteDeComunicaCao(String downloadDir, Document gov) {
         String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
-        Document prestador = HttpBuilder.configure {
+        Document prestador = configure {
             request.uri = acessGov
         }.get() as Document
 
@@ -42,27 +40,23 @@ class ANSCrawler {
 
         String mesAno = acessTISS.getElementsContainingOwnText("Clique aqui para acessar a versão").first().attr("href")
 
-        Document acessMesAno = HttpBuilder.configure {
+        Document acessMesAno = configure {
             request.uri = mesAno
         }.get() as Document
 
         acessMesAno.select("tr").each { tr ->
             String url = tr.select("a").attr("href")
-            String saveAs = downloadDir + "/" + tr.select("a").text()
             if(tr.children().first().text().contains("Componente de Comunicação")) {
-                baixarArquivo(url, saveAs)
+                baixarArquivo(url.trim(), downloadDir + "/ComponenteDeComunicacao.zip")
             }
         }
     }
 
-    static void coletarDadosHistoricos() {
-        Document gov = configure {
-            request.uri = 'https://www.gov.br/ans/pt-br'
-        }.get()
+    static void coletarDadosHistoricos(String downloadDir, Document gov) {
 
         String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
-        Document prestador = HttpBuilder.configure {
+        Document prestador = configure {
             request.uri = acessGov
         }.get() as Document
 
@@ -74,7 +68,7 @@ class ANSCrawler {
 
         String historico = acessTISS.getElementsContainingOwnText("Clique aqui para acessar todas as versões dos Componentes").first().attr("href")
 
-        Document acessHistorico = HttpBuilder.configure {
+        Document acessHistorico = configure {
             request.uri = historico
         }.get() as Document
 
@@ -88,20 +82,18 @@ class ANSCrawler {
                 String ano = competencia.split("/")[1]
                 // Filtrar a partir de jan/2016
                 if (Integer.parseInt(ano) >= 2016) {
-                    escreverArquivo("Competência: ${competencia} | Publicação: ${publicacao} | Vigência: ${vigencia}\n", "Historico.txt")
+                    escreverArquivo("Competência: ${competencia} | Publicação: ${publicacao} | Vigência: ${vigencia}\n", downloadDir+"/Historico.txt")
                 }
             }
         }
     }
 
-    static void baixarTabelaErros(String downloadDir) {
-        Document gov = configure {
-            request.uri = 'https://www.gov.br/ans/pt-br'
-        }.get()
+    static void baixarTabelaErros(String downloadDir, Document gov) {
+
 
         String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
-        Document prestador = HttpBuilder.configure {
+        Document prestador = configure {
             request.uri = acessGov
         }.get() as Document
 
@@ -113,7 +105,7 @@ class ANSCrawler {
 
         String tabelas = acessTISS.getElementsContainingOwnText("Clique aqui para acessar as planilhas").first().attr("href")
 
-        Document acessTabelas = HttpBuilder.configure {
+        Document acessTabelas = configure {
             request.uri = tabelas
         }.get() as Document
 
@@ -128,15 +120,13 @@ class ANSCrawler {
             def inputStream = url.openStream()
             Files.copy(inputStream, Paths.get(saveAs))
             inputStream.close()
-            println "Arquivo baixado com sucesso!"
         } catch (IOException e) {
             e.printStackTrace()
         }
-        println("Baixando arquivo de $fileUrl para $saveAs")
     }
 
     static void escreverArquivo(String Dados, String saveAS) {
-        def file = new File("./Downloads/Aquivos_padrao_TISS/" + saveAS)
+        def file = new File(saveAS)
         file.append(Dados)
     }
 }
