@@ -1,0 +1,34 @@
+plugins {
+    id 'groovy'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:3.0.7'
+    implementation 'io.github.http-builder-ng:http-builder-ng-apache:1.0.4'
+    implementation 'org.slf4j:slf4j-api:1.8.0-alpha0'
+    implementation 'org.jsoup:jsoup:1.14.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    implementation "org.apache.ivy:ivy:2.4.0"
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation 'org.slf4j:slf4j-api:2.0.4'
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
+    testImplementation 'org.slf4j:slf4j-jdk11:2.0.4'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
+    testImplementation 'org.slf4j:slf4j-reload4j:2.0.4'
+    implementation 'ch.qos.logback:logback-classic:1.4.12' // Verifique a versão mais recente
+
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
