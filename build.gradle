@@ -19,7 +19,7 @@ dependencies {
     implementation "org.apache.ivy:ivy:2.4.0"
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation 'org.slf4j:slf4j-api:2.0.4'
-// https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
     testImplementation 'org.slf4j:slf4j-jdk11:2.0.4'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j
     testImplementation 'org.slf4j:slf4j-reload4j:2.0.4'

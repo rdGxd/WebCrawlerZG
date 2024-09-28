@@ -13,10 +13,15 @@ import org.jsoup.nodes.Document
 class ANSCrawler {
     static void main(String[] args) {
         String downloadDir = "./Downloads/Aquivos_padrao_TISS"
-        Document gov = configure {
+        new File(downloadDir).mkdirs()
+
+        Document Inicial = configure {
             request.uri = 'https://www.gov.br/ans/pt-br'
         }.get()
-        new File(downloadDir).mkdirs()
+        String acessGov = Inicial.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
+        Document gov = configure {
+            request.uri = acessGov
+        }.get()
 
         componenteDeComunicaCao(downloadDir, gov)
 
@@ -26,13 +31,8 @@ class ANSCrawler {
     }
 
     static void componenteDeComunicaCao(String downloadDir, Document gov) {
-        String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
-        Document prestador = configure {
-            request.uri = acessGov
-        }.get()
-
-        String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
+        String tiss = gov.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
         Document acessTISS = configure {
             request.uri = tiss
@@ -54,13 +54,7 @@ class ANSCrawler {
 
     static void coletarDadosHistoricos(String downloadDir, Document gov) {
 
-        String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
-
-        Document prestador = configure {
-            request.uri = acessGov
-        }.get()
-
-        String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
+        String tiss = gov.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
         Document acessTISS = configure {
             request.uri = tiss
@@ -89,13 +83,8 @@ class ANSCrawler {
     }
 
     static void baixarTabelaErros(String downloadDir, Document gov) {
-        String acessGov = gov.getElementsContainingOwnText("Espaço do Prestador de Serviços de Saúde").first().attr("href")
 
-        Document prestador = configure {
-            request.uri = acessGov
-        }.get()
-
-        String tiss = prestador.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
+        String tiss = gov.getElementsContainingOwnText("TISS - Padrão para Troca de Informação de Saúde Suplementar").first().attr("href")
 
         Document acessTISS = configure {
             request.uri = tiss
