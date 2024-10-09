@@ -17,13 +17,15 @@ class ANSCrawler {
         String acessGov = getFirstHref(inicial, "Espaço do Prestador de Serviços de Saúde")
         Document gov = fetchDocument(acessGov)
 
-        componenteDeComunicaCao(downloadDir, gov)
-        coletarDadosHistoricos(downloadDir, gov)
-        baixarTabelaErros(downloadDir, gov)
+        String textoInicial =  "TISS - Padrão para Troca de Informação de Saúde Suplementar"
+
+        componenteDeComunicaCao(downloadDir, gov, textoInicial)
+        coletarDadosHistoricos(downloadDir, gov, textoInicial)
+        baixarTabelaErros(downloadDir, gov, textoInicial)
     }
 
-    static void componenteDeComunicaCao(String downloadDir, Document gov) {
-        String tiss = getFirstHref(gov, "TISS - Padrão para Troca de Informação de Saúde Suplementar")
+    static void componenteDeComunicaCao(String downloadDir, Document gov, String textoInicial) {
+        String tiss = getFirstHref(gov, textoInicial)
         Document acessTISS = fetchDocument(tiss)
         String mesAno = getFirstHref(acessTISS, "Clique aqui para acessar a versão")
         Document acessMesAno = fetchDocument(mesAno)
@@ -36,8 +38,8 @@ class ANSCrawler {
         }
     }
 
-    static void coletarDadosHistoricos(String downloadDir, Document gov) {
-        String tiss = getFirstHref(gov, "TISS - Padrão para Troca de Informação de Saúde Suplementar")
+    static void coletarDadosHistoricos(String downloadDir, Document gov, String textoInicial) {
+        String tiss = getFirstHref(gov, textoInicial)
         Document acessTISS = fetchDocument(tiss)
         String historico = getFirstHref(acessTISS, "Clique aqui para acessar todas as versões dos Componentes")
         Document acessHistorico = fetchDocument(historico)
@@ -57,8 +59,8 @@ class ANSCrawler {
         }
     }
 
-    static void baixarTabelaErros(String downloadDir, Document gov) {
-        String tiss = getFirstHref(gov, "TISS - Padrão para Troca de Informação de Saúde Suplementar")
+    static void baixarTabelaErros(String downloadDir, Document gov, String textoInicial) {
+        String tiss = getFirstHref(gov, textoInicial)
         Document acessTISS = fetchDocument(tiss)
         String tabelas = getFirstHref(acessTISS, "Clique aqui para acessar as planilhas")
         Document acessTabelas = fetchDocument(tabelas)
